@@ -33,10 +33,27 @@ const Navbar = ({ handleToggleMode, mode }) => {
         TODOs List
         </Link>
         {isSmallScreen && (
-          <div className={`navbar-toggle mx-2 ${isOpen ? 'open' : ''}`} onClick={toggleNavbar}>
-            <div className='bar' style={{ backgroundColor: mode === 'light' ? 'black' : 'white' }}></div>
-            <div className='bar' style={{ backgroundColor: mode === 'light' ? 'black' : 'white' }}></div>
-          </div>
+  <div
+  className={`navbar-toggle mx-2 ${isOpen ? 'open' : ''}`}
+  onClick={toggleNavbar}
+  style={{ cursor: 'pointer' }}
+>
+  <div
+    className="bar"
+    style={{
+      backgroundColor: mode === 'light' ? 'black' : 'white',
+      cursor: 'pointer',
+    }}
+  ></div>
+
+  <div
+    className="bar"
+    style={{
+      backgroundColor: mode === 'light' ? 'black' : 'white',
+      cursor: 'pointer',
+    }}
+  ></div>
+</div>
         )}
         <div className={`collapse navbar-collapse ${isOpen ? 'show' : ''}`} id="navbarSupportedContent">
           <ul className="navbar-nav me-auto mb-2 mb-lg-0 mx-2">
@@ -51,6 +68,7 @@ const Navbar = ({ handleToggleMode, mode }) => {
               </Link>
             </li>
           </ul>
+
           <div className="form-check form-switch mx-2">
             <input
               className="form-check-input"
@@ -67,6 +85,7 @@ const Navbar = ({ handleToggleMode, mode }) => {
               {mode === 'dark' ? 'Enable Light Mode' : 'Enable Dark Mode'}
             </label>
           </div>
+
         </div>
       </div>
     </nav>
