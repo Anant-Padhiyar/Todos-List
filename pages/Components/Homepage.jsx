@@ -1,179 +1,443 @@
 import React, { useState, useEffect } from 'react';
 
-const Homepage = ({ mode, handleToggleMode, heading}) => {
+const Homepage = ({ mode, handleToggleMode, heading }) => {
+
+  // Main input
   const [Title, setTitle] = useState('');
-  const [Desc, setDesc] = useState('');
+
+  // Edit input - separate from main input
+  const [editTitle, setEditTitle] = useState('');
+
+  // Items
   const [Items, setItems] = useState([]);
-  const [i,setI] = useState([]);
-  const [EditTitle, setEditTitle] = useState(''); // Separate state for modal title
-  const [EditDesc, setEditDesc] = useState(''); // Separate state for modal description
 
-  const handleTitleChange = (event) => {
-    setTitle(event.target.value);
-  };
+  // Currently editing index
+  const [i, setI] = useState(null);
 
-  const handleDescChange = (event) => {
-    setDesc(event.target.value);
-  };
 
-  const getAndpdate = () => {
-if(Title!=='' || Desc !==''){
-    let itemsJsonArray = JSON.parse(localStorage.getItem('itemsJson')) || [];
-    itemsJsonArray.push([Title, Desc]);
-    localStorage.setItem('itemsJson', JSON.stringify(itemsJsonArray));
-    setTitle('');
-    setDesc('');
-    update();
-}
-else{
-  alert('Set Your Goal')
-}
-  };
-
-  const Edited = (index) => {
-    setI(index); 
-    // console.log('index = '+i)
-    const item = Items[index];
-    // console.log(item)
-    setTitle(item[0]);
-    setDesc(item[1]);
-  };
-
-  const EditUpdate = ()=>{
-    // console.log('index = '+i)
-    let itemsJsonArray = JSON.parse(localStorage.getItem('itemsJson'))
-    itemsJsonArray.splice(i,1,[Title,Desc]);
-    setTitle('');
-    setDesc('')
-    localStorage.setItem('itemsJson', JSON.stringify(itemsJsonArray));
-    update();
-}
+  // =========================
+  // Update Items
+  // =========================
 
   const update = () => {
-    let itemsJsonArray = JSON.parse(localStorage.getItem('itemsJson')) || [];
+    const itemsJsonArray =
+      JSON.parse(localStorage.getItem('itemsJson')) || [];
+
     setItems(itemsJsonArray);
-    // console.table(itemsJsonArray);
   };
 
-const handleDelete = (index) => {
-if (confirm('Do you really want to Delete This Note?')) {
-let itemsJsonArray = JSON.parse(localStorage.getItem('itemsJson')) || [];
-itemsJsonArray.splice(index, 1);
-localStorage.setItem('itemsJson', JSON.stringify(itemsJsonArray));
-update();
-  }
+
+  // =========================
+  // Add Goal
+  // =========================
+
+  const getAndpdate = () => {
+
+    if (Title.trim() !== '') {
+
+      const itemsJsonArray =
+        JSON.parse(localStorage.getItem('itemsJson')) || [];
+
+      // Store only Title
+      itemsJsonArray.push(Title);
+
+      localStorage.setItem(
+        'itemsJson',
+        JSON.stringify(itemsJsonArray)
+      );
+
+      // Clear input
+      setTitle('');
+
+      // Update table
+      setItems(itemsJsonArray);
+
+    } else {
+
+      alert('Set Your Goal');
+
+    }
   };
+
+
+  // =========================
+  // Open Edit Modal
+  // =========================
+
+  const Edited = (index) => {
+
+    setI(index);
+
+    // Copy item to separate edit state
+    setEditTitle(Items[index]);
+  };
+
+
+  // =========================
+  // Update Title
+  // =========================
+
+  const EditUpdate = () => {
+
+    if (i === null) {
+      return;
+    }
+
+    const itemsJsonArray =
+      JSON.parse(localStorage.getItem('itemsJson')) || [];
+
+    // Update ONLY selected title
+    itemsJsonArray[i] = editTitle;
+
+    // Save to localStorage
+    localStorage.setItem(
+      'itemsJson',
+      JSON.stringify(itemsJsonArray)
+    );
+
+    // Update table AFTER clicking Update
+    setItems(itemsJsonArray);
+
+    // Clear edit state
+    setEditTitle('');
+    setI(null);
+  };
+
+
+  // =========================
+  // Delete
+  // =========================
+
+  const handleDelete = (index) => {
+
+    if (confirm('Do you really want to Delete This Note?')) {
+
+      const itemsJsonArray =
+        JSON.parse(localStorage.getItem('itemsJson')) || [];
+
+      itemsJsonArray.splice(index, 1);
+
+      localStorage.setItem(
+        'itemsJson',
+        JSON.stringify(itemsJsonArray)
+      );
+
+      update();
+    }
+  };
+
+
+  // =========================
+  // Load Items
+  // =========================
 
   useEffect(() => {
     update();
   }, []);
 
+
+  // =========================
+  // Clear List
+  // =========================
+
   const clearstorage = () => {
+
     if (confirm('Do you really want to ClearList?')) {
-      // console.log('clear');
+
       localStorage.removeItem('itemsJson');
+
       update();
     }
   };
 
+
   return (
-<div className="container">
-<h2 className="text-center mt-3" style={{ color: mode === 'light' ? 'black' : 'white' }}>
-Todos List
-</h2>
 
-        {/* <Link href={`./ProductEdit?Modal=${product.Modal}&Price=${product.Price}`}> 
+    <div className="container">
 
-<div className="mb-2 mx-2">
-<label htmlFor="title" className="form-label">
-TODO Title
-</label>
-<input type="text" className="form-control" id="title" value={Title} onChange={handleTitleChange}
-style={{ backgroundColor: mode === 'light' ? 'white' : 'black', color: mode === 'light' ? 'black' : 'white' }}/>
-</div>
+      {/* =========================
+          Heading
+      ========================= */}
 
-*/}
+      <h2
+        className="text-center mt-3"
+        style={{
+          color: mode === 'light'
+            ? 'black'
+            : 'white'
+        }}
+      >
+        Todos List
+      </h2>
 
-<div className="mb-3 mx-2">
-<label htmlFor="desc" className="form-label">
-Set Your Goals here
-</label>
-<textarea className="form-control" id="desc" rows="3" value={Desc} onChange={handleDescChange}
-style={{ backgroundColor: mode === 'light' ? 'white' : 'black', color: mode === 'light' ? 'black' : 'white' }}></textarea>
-</div>
 
-<div className="text-center mt-3 mb-3">
-<button type="submit" id="add" className="btn btn-success mx-4" onClick={getAndpdate}>Submit</button>
-<button type="submit" id="clear" className="btn btn-danger mx-4" onClick={clearstorage}>Clear List</button>
-</div>
+      {/* =========================
+          Add Goal
+      ========================= */}
 
-<div id="items" className="">
-<table className={`table table-sm custom-table ${mode === 'light' ? 'light-mode' : 'dark-mode'}`}>
-<thead>
-<tr>
-<th scope="col">SNo</th>
-{/*
-<th scope="col">Title</th>*/}
-<th scope="col">Goals</th>
-<th scope="col">Edit</th>
-<th scope="col">Delete</th>
-</tr>
-</thead>
-<tbody>
-{Items.map((item, index) => 
-<tr key={index}>
-<th scope="row">{index + 1}</th>
-{/*<td>{item[0]}</td>*/}
-<td>{item[1]}</td>
-<td>
-<button className="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal" onClick={() => Edited(index)}>Edit</button>
-</td>
-<td>
-<button className="btn btn-danger btn-sm" onClick={() => handleDelete(index)}>Delete</button>
-</td>
-</tr>
-)}
-</tbody>
-</table>
-</div>
+      <div className="mb-3 mx-2">
 
-<div className="">
-<div className={`modal fade ${mode === 'light' ? 'light-mode' : 'dark-mode'}`} id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-<div className="modal-dialog">
-<div className="modal-content">
+        <label
+          htmlFor="title"
+          className="form-label"
+        >
+          Set Your Goals here
+        </label>
 
-<div className="modal-header">
-<h1 className="modal-title fs-5" id="exampleModalLabel">Edit Goal Here</h1>
-<button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-</div>
-<div className="modal-body">
+        <textarea
+          className="form-control"
+          id="title"
+          rows="3"
+          value={Title}
+          onChange={(e) => setTitle(e.target.value)}
+          style={{
+            backgroundColor:
+              mode === 'light'
+                ? 'white'
+                : 'black',
 
-{/*
-<div className="mb-3">
-<label htmlFor="EditT" className="form-label">TODO Title</label>
-<input type="text" className="form-control" id="EditT" aria-describedby="emailHelp" value={Title} onChange={handleTitleChange}
-style={{ backgroundColor: mode === 'light' ? 'white' : 'black', color: mode === 'light' ? 'black' : 'white' }}/>
-</div>
-*/}
+            color:
+              mode === 'light'
+                ? 'black'
+                : 'white'
+          }}
+        ></textarea>
 
-<div className="mb-3">
-<label htmlFor="EditD" className="form-label"></label>
-<textarea className="form-control" id="EditD" rows="3" value={Desc} onChange={handleDescChange}
-style={{ backgroundColor: mode === 'light' ? 'white' : 'black', color: mode === 'light' ? 'black' : 'white' }}></textarea>
-</div>
-<div className="text-center mb-1">
-<button type="submit" id="update" className="btn btn-success text-center" data-bs-toggle="modal" data-bs-target="#exampleModal" onClick={EditUpdate}>Update
-</button>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
+      </div>
 
-</div>
+
+      {/* =========================
+          Buttons
+      ========================= */}
+
+      <div className="text-center mt-3 mb-3">
+
+        <button
+          type="button"
+          id="add"
+          className="btn btn-success mx-4"
+          onClick={getAndpdate}
+        >
+          Submit
+        </button>
+
+
+        <button
+          type="button"
+          id="clear"
+          className="btn btn-danger mx-4"
+          onClick={clearstorage}
+        >
+          Clear List
+        </button>
+
+      </div>
+
+
+      {/* =========================
+          Table
+      ========================= */}
+
+      <div id="items">
+
+        <table
+          className={`table table-sm custom-table ${
+            mode === 'light'
+              ? 'light-mode'
+              : 'dark-mode'
+          }`}
+        >
+
+          <thead>
+
+            <tr>
+
+              <th scope="col">
+                SNo
+              </th>
+
+              <th scope="col">
+                Goal
+              </th>
+
+              <th scope="col">
+                Edit
+              </th>
+
+              <th scope="col">
+                Delete
+              </th>
+
+            </tr>
+
+          </thead>
+
+
+          <tbody>
+
+            {Items.map((item, index) => (
+
+              <tr key={index}>
+
+                <th scope="row">
+                  {index + 1}
+                </th>
+
+
+                <td>
+                  {item}
+                </td>
+
+
+                <td>
+
+                  <button
+                    type="button"
+                    className="btn btn-warning btn-sm"
+                    data-bs-toggle="modal"
+                    data-bs-target="#exampleModal"
+                    onClick={() => Edited(index)}
+                  >
+                    Edit
+                  </button>
+
+                </td>
+
+
+                <td>
+
+                  <button
+                    type="button"
+                    className="btn btn-danger btn-sm"
+                    onClick={() => handleDelete(index)}
+                  >
+                    Delete
+                  </button>
+
+                </td>
+
+              </tr>
+
+            ))}
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+
+      {/* =========================
+          Edit Modal
+      ========================= */}
+
+      <div
+        className={`modal fade ${
+          mode === 'light'
+            ? 'light-mode'
+            : 'dark-mode'
+        }`}
+        id="exampleModal"
+        tabIndex="-1"
+        aria-labelledby="exampleModalLabel"
+        aria-hidden="true"
+      >
+
+        <div className="modal-dialog">
+
+          <div className="modal-content">
+
+
+            {/* Modal Header */}
+
+            <div className="modal-header">
+
+              <h1
+                className="modal-title fs-5"
+                id="exampleModalLabel"
+              >
+                Edit Goal Here
+              </h1>
+
+
+              <button
+                type="button"
+                className="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
+
+            </div>
+
+
+            {/* Modal Body */}
+
+            <div className="modal-body">
+
+              <div className="mb-3">
+
+                <label
+                  htmlFor="EditT"
+                  className="form-label"
+                >
+                  Goal
+                </label>
+
+
+                <textarea
+                  className="form-control"
+                  id="EditT"
+                  rows="3"
+                  value={editTitle}
+                  onChange={(e) =>
+                    setEditTitle(e.target.value)
+                  }
+                  style={{
+                    backgroundColor:
+                      mode === 'light'
+                        ? 'white'
+                        : 'black',
+
+                    color:
+                      mode === 'light'
+                        ? 'black'
+                        : 'white'
+                  }}
+                ></textarea>
+
+              </div>
+
+
+              {/* Update Button */}
+
+              <div className="text-center mb-1">
+
+                <button
+                  type="button"
+                  id="update"
+                  className="btn btn-success"
+                  data-bs-dismiss="modal"
+                  onClick={EditUpdate}
+                >
+                  Update
+                </button>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
   );
 };
 
 export default Homepage;
+
+
+
 
