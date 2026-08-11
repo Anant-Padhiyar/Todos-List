@@ -238,93 +238,151 @@ const Homepage = ({ mode, handleToggleMode, heading }) => {
           Table
       ========================= */}
 
-      <div id="items">
+     <div id="items">
 
-        <table
-          className={`table table-sm custom-table ${
-            mode === 'light'
-              ? 'light-mode'
-              : 'dark-mode'
-          }`}
+  <table
+    className={`table table-sm custom-table ${
+      mode === 'light' ? 'light-mode' : 'dark-mode'
+    }`}
+    style={{
+      width: '100%',
+      tableLayout: 'auto'
+    }}
+  >
+
+    <thead>
+      <tr>
+
+        <th
+          scope="col"
+          style={{
+            textAlign: 'left',
+            whiteSpace: 'nowrap'
+          }}
         >
+          SNo       </th>
 
-          <thead>
+        <th
+          scope="col"
+          style={{
+            textAlign: 'left',
+            width: '100%',
+               paddingLeft: '25px'
+          }}
+        >
+          Goal
+        </th>
 
-            <tr>
+        <th
+          scope="col"
+          style={{
+            textAlign: 'right',
+            whiteSpace: 'nowrap',
+            paddingLeft: '0px',
+            paddingRight: '27px'
+          }}
+          className=""
+        >
+          Edit
+        </th>
 
-              <th scope="col">
-                SNo
-              </th>
+        <th
+          scope="col"
+          style={{
+            textAlign: 'right',
+            whiteSpace: 'nowrap',
+            paddingLeft: '20px',
+            paddingRight: '20.5px'
+          }}
+          className=""
+        >
+          Delete
+        </th>
 
-              <th scope="col">
-                Goal
-              </th>
-
-              <th scope="col">
-                Edit
-              </th>
-
-              <th scope="col">
-                Delete
-              </th>
-
-            </tr>
-
-          </thead>
-
-
-          <tbody>
-
-            {Items.map((item, index) => (
-
-              <tr key={index}>
-
-                <th scope="row">
-                  {index + 1}
-                </th>
-
-
-                <td>
-                  {item}
-                </td>
-
-
-                <td>
-
-                  <button
-                    type="button"
-                    className="btn btn-warning btn-sm"
-                    data-bs-toggle="modal"
-                    data-bs-target="#exampleModal"
-                    onClick={() => Edited(index)}
-                  >
-                    Edit
-                  </button>
-
-                </td>
+      </tr>
+    </thead>
 
 
-                <td>
+    <tbody>
 
-                  <button
-                    type="button"
-                    className="btn btn-danger btn-sm"
-                    onClick={() => handleDelete(index)}
-                  >
-                    Delete
-                  </button>
+      {Items.map((item, index) => (
 
-                </td>
+        <tr key={index} className="space-x-3">
 
-              </tr>
+          {/* SNo - LEFT */}
+          <th
+            scope="row"
+            style={{
+              textAlign: 'left',
+              whiteSpace: 'nowrap'
+            }}
+          >
+            {index + 1}
+          </th>
 
-            ))}
 
-          </tbody>
+          {/* Goal - LEFT */}
+          <td
+            style={{
+              textAlign: 'left',
+              width: '100%' ,
+                 paddingLeft: '25px'
+            }}
+          >
+            {item}
+          </td>
 
-        </table>
 
-      </div>
+          {/* Edit - RIGHT */}
+          <td
+            style={{
+              textAlign: 'right',
+              whiteSpace: 'nowrap',
+              paddingLeft: '0px',
+              paddingRight: '20px'
+            }}
+          >
+            <button
+              type="button"
+              className="btn btn-warning btn-sm text-center"
+              data-bs-toggle="modal"
+              data-bs-target="#exampleModal"
+              onClick={() => Edited(index)}
+            >
+              Edit
+            </button>
+          </td>
+
+
+          {/* Delete - RIGHT */}
+          <td
+            style={{
+              textAlign: 'right',
+              whiteSpace: 'nowrap',
+           paddingLeft: '15px',
+              paddingRight: '15px',
+              
+            }}
+
+          >
+            <button
+              type="button"
+              className="btn btn-danger btn-sm"
+              onClick={() => handleDelete(index)}
+            >
+              Delete
+            </button>
+          </td>
+
+        </tr>
+
+      ))}
+
+    </tbody>
+
+  </table>
+
+</div>
 
 
       {/* =========================

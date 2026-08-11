@@ -38,20 +38,19 @@
 }
 
 .bar {
-  width: 27px;
-  height: 2px;
-  /* background-color: black; */
-  margin: 6px 0;
+  width: 33px;
+  height: 3px;
+  margin: 10px 0;
   transition: transform 0.3s ease;
 }
 
 /* Hamburger menu icon animation for open state */
 .open .bar:nth-child(1) {
-  transform: rotate(-45deg) translate(-3px, 3px) scaleX(1); /* Adjust the scaleX value to visually equalize the size */
+  transform: rotate(-45deg) translate(-5px, 4px) scaleX(1); /* Adjust the scaleX value to visually equalize the size */
 }
 
 .open .bar:nth-child(2) {
-  transform: rotate(45deg) translate(-3px, -3px) scaleX(1); /* Adjust the scaleX value to visually equalize the size */
+  transform: rotate(45deg) translate(-5px, -4px) scaleX(1); /* Adjust the scaleX value to visually equalize the size */
 }
 
 /* Media query for smaller screens */
