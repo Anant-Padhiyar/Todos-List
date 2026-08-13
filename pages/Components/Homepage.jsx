@@ -14,6 +14,7 @@ const Homepage = ({ mode, handleToggleMode, heading }) => {
   // Currently editing index
   const [i, setI] = useState(null);
 
+const [copied, setCopied] = useState(false);
 
   // =========================
   // Update Items
@@ -72,6 +73,20 @@ const Homepage = ({ mode, handleToggleMode, heading }) => {
     setEditTitle(Items[index]);
   };
 
+const Copy = async (index) => {
+  try {
+    await navigator.clipboard.writeText(Items[index]);
+
+    const toastElement = document.getElementById("copyToast");
+
+    if (toastElement && window.bootstrap) {
+      const toast = window.bootstrap.Toast.getOrCreateInstance(toastElement);
+      toast.show();
+    }
+  } catch (error) {
+    console.error("Copy failed:", error);
+  }
+};
 
   // =========================
   // Update Title
@@ -154,6 +169,41 @@ const Homepage = ({ mode, handleToggleMode, heading }) => {
   return (
 
     <div className="container">
+
+<div
+  id="copyToast"
+  className="toast position-fixed top-0 end-0 m-3"
+  role="alert"
+  aria-live="assertive"
+  aria-atomic="true"
+  style={{
+    zIndex: 9999,
+    backgroundColor: mode === 'dark' ? 'black' : 'white',
+    color: mode === 'dark' ? 'white' : 'black',
+  }}
+>
+  <div
+    className="toast-header"
+    style={{
+      backgroundColor: mode === 'dark' ? 'green' : 'green',
+      color: mode === 'dark' ? 'white' : 'white',
+    }}
+  >
+    <strong className="me-auto">Success</strong>
+
+    <button
+      type="button"
+      className={`btn-close ${mode === 'dark' ? 'btn-close-white' : 'btn-close-white'}`}
+      data-bs-dismiss="toast"
+      aria-label="Close"
+    ></button>
+  </div>
+
+  <div className="toast-body">
+    Copied successfully!
+  </div>
+</div>
+
 
       {/* =========================
           Heading
@@ -279,7 +329,21 @@ const Homepage = ({ mode, handleToggleMode, heading }) => {
             textAlign: 'right',
             whiteSpace: 'nowrap',
             paddingLeft: '0px',
-            paddingRight: '27px'
+            paddingRight: '28.5px'
+          }}
+          className=""
+        >
+          Copy
+        </th>
+
+
+    <th
+          scope="col"
+          style={{
+            textAlign: 'right',
+            whiteSpace: 'nowrap',
+            paddingLeft: '20px',
+            paddingRight: '26px'
           }}
           className=""
         >
@@ -332,6 +396,23 @@ const Homepage = ({ mode, handleToggleMode, heading }) => {
             {item}
           </td>
 
+    {/* Edit - RIGHT */}
+          <td
+            style={{
+              textAlign: 'right',
+              whiteSpace: 'nowrap',
+              paddingLeft: '0px',
+              paddingRight: '22px'
+            }}
+          >
+            <button
+              type="button"
+              className="btn btn-info btn-sm text-center"
+              onClick={() => Copy(index)}
+            >
+              Copy
+            </button>
+          </td>
 
           {/* Edit - RIGHT */}
           <td
